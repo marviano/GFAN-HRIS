@@ -24,28 +24,41 @@ CREATE TABLE `businesses` (
 
 
 
-CREATE TABLE IF NOT EXISTS employees (
-  id INT NOT NULL AUTO_INCREMENT,
-  user_id INT DEFAULT NULL,
-  business_id INT DEFAULT NULL,
-  no_ktp VARCHAR(50) NOT NULL,
-  phone VARCHAR(20) DEFAULT NULL,
-  nama_karyawan VARCHAR(255) NOT NULL,
-  jenis_kelamin ENUM('pria', 'wanita') NOT NULL,
-  alamat TEXT DEFAULT NULL,
-  tanggal_lahir DATE DEFAULT NULL,
-  tanggal_bekerja DATE NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY unique_no_ktp (no_ktp),
-  KEY idx_employees_user (user_id),
-  KEY idx_employees_business (business_id),
-  KEY idx_employees_phone (phone),
-  KEY idx_employees_nama (nama_karyawan),
-  CONSTRAINT fk_employees_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
-  CONSTRAINT fk_employees_business FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Employee records linked to users and businesses';
+CREATE TABLE `employees` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `business_id` int DEFAULT NULL,
+  `jabatan_id` int DEFAULT NULL,
+  `no_ktp` varchar(50) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `nama_karyawan` varchar(255) NOT NULL,
+  `jenis_kelamin` enum('pria','wanita') NOT NULL,
+  `alamat` text,
+  `tanggal_lahir` date DEFAULT NULL,
+  `tanggal_bekerja` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_no_ktp` (`no_ktp`),
+  KEY `idx_employees_user` (`user_id`),
+  KEY `idx_employees_business` (`business_id`),
+  KEY `idx_employees_phone` (`phone`),
+  KEY `idx_employees_nama` (`nama_karyawan`),
+  KEY `idx_employees_jabatan` (`jabatan_id`),
+  CONSTRAINT `fk_employees_business` FOREIGN KEY (`business_id`) REFERENCES `businesses` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_employees_position` FOREIGN KEY (`jabatan_id`) REFERENCES `employees_position` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_employees_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Employee records linked to users and businesses';
+
+CREATE TABLE `employees_position` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nama_jabatan` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_nama_jabatan` (`nama_jabatan`),
+  KEY `idx_nama_jabatan` (`nama_jabatan`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Employee job titles/positions';
 
 
 
